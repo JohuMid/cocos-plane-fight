@@ -4,12 +4,12 @@ const { ccclass, property } = _decorator;
 @ccclass('Bg')
 export class Bg extends Component {
     @property(Node)
-    public bg01:Node = null
+    public bg01: Node = null
     @property(Node)
-    public bg02:Node = null
+    public bg02: Node = null
 
     @property
-    speed:number = 100;
+    speed: number = 100;
 
     start() {
 
@@ -17,7 +17,7 @@ export class Bg extends Component {
 
     update(deltaTime: number) {
         let position1 = this.bg01.position;
-        this.bg01.setPosition(position1.x,position1.y-this.speed * deltaTime,position1.z);
+        this.bg01.setPosition(position1.x, position1.y - this.speed * deltaTime, position1.z);
 
         let position2 = this.bg02.position;
         this.bg02.setPosition(position2.x, position2.y - this.speed * deltaTime, position2.z);
@@ -30,7 +30,7 @@ export class Bg extends Component {
         }
         if (this.bg02.position.y <= -852) {
             this.bg02.setPosition(p1.x, p1.y + 852, p1.z);
-         }
+        }
     }
 }
 
