@@ -1,4 +1,4 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Animation, animation, Component, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enery')
@@ -6,9 +6,11 @@ export class Enery extends Component {
     @property
     speed: number = 300;
 
+    @property({type:Animation})
+    anim:Animation = null;
 
     start() {
-
+        // this.anim.play();
     }
 
     update(deltaTime: number) {
