@@ -1,6 +1,11 @@
 import { _decorator, Component, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
+enum ShootType {
+   OneShoot, // 单射
+   TwoShoot, // 双射 
+}
+
 @ccclass('Player')
 export class Player extends Component {
     @property
@@ -12,7 +17,19 @@ export class Player extends Component {
     buttle1Prefab: Prefab = null; // 子弹预设
 
     @property({ type: Node })
-    buttle1Position:Node = null;
+    position1:Node = null;
+
+    @property({ type: Prefab })
+    buttle2Prefab: Prefab = null; // 子弹预设
+
+    @property({ type: Node })
+    position2:Node = null;
+
+    @property({ type: Node })
+    position3: Node = null;
+
+    @property
+    shootType:ShootType = ShootType.OneShoot; // 射击类型
 
 
     shootTime: number = 0; // 上次射击时间
@@ -52,12 +69,38 @@ export class Player extends Component {
 
     }
     protected update(deltaTime: number): void {
+        switch (this.shootType) {
+            case ShootType.OneShoot: // 单射
+                this.oneShoot(deltaTime); // 调用单射方法
+                break;
+            case ShootType.TwoShoot: // 双射
+                this.twoShoot(deltaTime); // 调用双射方法
+                break;
+        }
+        this.shootTime += deltaTime;
+        
+    }
+
+    oneShoot(deltaTime: number) {
         this.shootTime += deltaTime;
         if (this.shootTime >= this.shootRate) {
             this.shootTime = 0; // 重置射击时间
             const buttle1 = instantiate(this.buttle1Prefab); // 实例化子弹
             this.buttleParent.addChild(buttle1); // 添加到父节点下
-            buttle1.setWorldPosition(this.buttle1Position.worldPosition)
+            buttle1.setWorldPosition(this.position1.worldPosition)
+        }
+    }
+
+    twoShoot(deltaTime: number) {
+        this.shootTime += deltaTime;
+        if (this.shootTime >= this.shootRate) {
+            this.shootTime = 0; // 重置射击时间
+            const buttle1 = instantiate(this.buttle2Prefab); // 实例化子弹
+            const buttle2 = instantiate(this.buttle2Prefab); // 实例化子弹
+            this.buttleParent.addChild(buttle1); // 添加到父节点下
+            this.buttleParent.addChild(buttle2); // 添加到父节点下
+            buttle1.setWorldPosition(this.position2.worldPosition)
+            buttle2.setWorldPosition(this.position3.worldPosition)
         }
     }
     
