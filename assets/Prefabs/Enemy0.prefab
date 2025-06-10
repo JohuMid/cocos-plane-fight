@@ -281,7 +281,9 @@
     "anim": {
       "__id__": 7
     },
-    "hp": 0.9,
+    "hp": 1,
+    "animHit": "",
+    "animDown": "Enemy0_Down",
     "_id": ""
   },
   {
