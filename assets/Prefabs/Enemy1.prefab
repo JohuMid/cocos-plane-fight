@@ -36,8 +36,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -36.885,
-      "y": 457.363,
+      "x": -107.381,
+      "y": 458.171,
       "z": 0
     },
     "_lrot": {
@@ -276,6 +276,7 @@
     "anim": {
       "__id__": 7
     },
+    "hp": 1,
     "_id": ""
   },
   {
@@ -291,6 +292,6 @@
       "__id__": 0
     },
     "fileId": "3eIpwfOAFO17zTxP14/a0Z",
-    "targetOverrides": null
+    "targetOverrides": []
   }
 ]
