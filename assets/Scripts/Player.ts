@@ -1,4 +1,4 @@
-import { _decorator, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
+import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
@@ -31,6 +31,17 @@ export class Player extends Component {
     @property
     shootType: ShootType = ShootType.OneShoot; // 射击类型
 
+    @property
+    lifeCount: number = 3;
+
+    @property({ type: Animation })
+    anim: Animation = null; // 动画组件
+
+    @property(CCString)
+    animHit: string = '';
+    @property(CCString)
+    animDown: string = '';
+
 
     shootTime: number = 0; // 上次射击时间
 
@@ -47,17 +58,32 @@ export class Player extends Component {
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
-        
+
+        this.lifeCount -= 1;
+        if (this.lifeCount > 0) {
+            this.anim.play(this.animHit);    
+        } else {
+            this.anim.play(this.animDown);
+        }
+
+        if (this.lifeCount <= 0) {
+            if (this.collider) {
+                this.collider.enabled = false; // 禁用碰撞器
+            }
+        }
     }
 
     protected onDestroy(): void {
         input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
         if (this.collider) {
-            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this); 
+            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         }
     }
 
     onTouchMove(event: EventTouch) {
+        if (this.lifeCount <= 0) { // 飞机死亡时不响应触摸事件
+            return; // 直接返回，不执行下面的代码
+        }
         // 获取触摸的位置
         let delta = event.getDelta();
         const p = this.node.position;

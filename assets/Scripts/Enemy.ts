@@ -1,4 +1,5 @@
 import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType } from 'cc';
+import { Bullet } from './Bullet';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enery')
@@ -28,7 +29,13 @@ export class Enery extends Component {
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
+
+
+        if (otherCollider.getComponent(Bullet)) {
+            otherCollider.enabled = false; // 禁用碰撞器
+        }
         this.hp -= 1;
+
         if (this.hp > 0) {
             this.anim.play(this.animHit);
         } else {
@@ -40,6 +47,7 @@ export class Enery extends Component {
             if (this.collider) {
                 this.collider.enabled = false; // 禁用碰撞器
             }
+
             const that = this
             this.scheduleOnce(() => {
                 that.node.destroy(); // 销毁敌人节点 
