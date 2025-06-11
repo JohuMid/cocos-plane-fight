@@ -20,7 +20,7 @@ export class Enery extends Component {
     collider: Collider2D = null;
 
     start() {
-        // this.anim.play();
+        // 初始化碰撞体
         this.collider = this.getComponent(Collider2D);
         if (this.collider) {
             this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);

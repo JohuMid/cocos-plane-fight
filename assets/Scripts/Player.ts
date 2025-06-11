@@ -1,9 +1,9 @@
-import { _decorator, Component, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
+import { _decorator, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
-   OneShoot, // 单射
-   TwoShoot, // 双射 
+    OneShoot, // 单射
+    TwoShoot, // 双射 
 }
 
 @ccclass('Player')
@@ -12,35 +12,49 @@ export class Player extends Component {
     shootRate: number = 0.5; // 射击频率，单位：秒
     @property({ type: Node })
     buttleParent: Node = null; // 子弹父节点
-    
+
     @property({ type: Prefab })
     buttle1Prefab: Prefab = null; // 子弹预设
 
     @property({ type: Node })
-    position1:Node = null;
+    position1: Node = null;
 
     @property({ type: Prefab })
     buttle2Prefab: Prefab = null; // 子弹预设
 
     @property({ type: Node })
-    position2:Node = null;
+    position2: Node = null;
 
     @property({ type: Node })
     position3: Node = null;
 
     @property
-    shootType:ShootType = ShootType.OneShoot; // 射击类型
+    shootType: ShootType = ShootType.OneShoot; // 射击类型
 
 
     shootTime: number = 0; // 上次射击时间
 
+    collider: Collider2D = null;
+
 
     protected onLoad(): void {
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+
+        this.collider = this.getComponent(Collider2D);
+        if (this.collider) {
+            this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        }
+    }
+
+    onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
+        
     }
 
     protected onDestroy(): void {
         input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        if (this.collider) {
+            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this); 
+        }
     }
 
     onTouchMove(event: EventTouch) {
@@ -78,7 +92,7 @@ export class Player extends Component {
                 break;
         }
         this.shootTime += deltaTime;
-        
+
     }
 
     oneShoot(deltaTime: number) {
@@ -103,7 +117,7 @@ export class Player extends Component {
             buttle2.setWorldPosition(this.position3.worldPosition)
         }
     }
-    
+
 }
 
 
