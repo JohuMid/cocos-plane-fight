@@ -1,6 +1,7 @@
 import { _decorator, Component, director, Node } from 'cc';
 import { ScoreUI } from './UI/ScoreUI';
 import { Player } from './Player';
+import { GameOverUI } from './UI/GameOverUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManger')
@@ -27,6 +28,14 @@ export class GameManger extends Component {
 
     @property({ type: Player })
     player:Player = null
+
+    @property({ type: Node })
+    pauseButtonNode: Node = null; // 暂停按钮节点
+    @property({ type: Node })
+    resumeButtonNode: Node = null; // 恢复按钮节点
+
+    @property({ type: GameOverUI })
+    gameOverUI: GameOverUI = null; // 游戏结束界面节点
 
     protected onLoad(): void {
         GameManger.instance = this; // 将当前实例设置为单例实例
@@ -61,13 +70,22 @@ export class GameManger extends Component {
         // 暂停游戏
         director.pause();
         this.player.disableControl();
-
+        this.pauseButtonNode.active = false; // 隐藏暂停按钮
+        this.resumeButtonNode.active = true; // 显示恢复按钮
     }
 
     onResumeButtonClick(){
         // 恢复游戏
         director.resume();
         this.player.enableControl();
+        this.pauseButtonNode.active = true; // 显示暂停按钮
+        this.resumeButtonNode.active = false; // 隐藏恢复按钮
+    }
+
+    gameOver() {
+        this.onPauseButtonClick();
+        // 触发游戏结束事件
+        this.gameOverUI.showGameOverUI(1,2); // 显示游戏结束界面
     }
 }
 

@@ -140,6 +140,9 @@ export class Player extends Component {
             if (this.collider) {
                 this.collider.enabled = false; // 禁用碰撞器
             }
+            this.scheduleOnce(() => { // 延迟销毁敌人节点
+                GameManger.getInstance().gameOver(); // 游戏结束
+            }, 0.4);
         }
     }
 
