@@ -63,6 +63,7 @@ export class Player extends Component {
     @property({ type: LifeCountUI })
     lifeCountUI:LifeCountUI = null; // 生命值UI组件
 
+    private canControl: boolean = true; // 控制开关
 
     protected onLoad(): void {
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
@@ -155,6 +156,9 @@ export class Player extends Component {
     }
 
     onTouchMove(event: EventTouch) {
+        if (!this.canControl) {
+            return; // 如果控制开关关闭，则不执行下面的代码
+        }
         if (this.lifeCount <= 0) { // 飞机死亡时不响应触摸事件
             return; // 直接返回，不执行下面的代码
         }
@@ -230,6 +234,13 @@ export class Player extends Component {
         }
     }
 
+    disableControl() { // 定义一个方法，用于禁用控制
+        this.canControl = false; // 设置控制开关为 false
+    }
+
+    enableControl() { // 定义一个方法，用于启用控制
+        this.canControl = true; // 设置控制开关为 true
+    }
 }
 
 
