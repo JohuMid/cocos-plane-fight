@@ -431,7 +431,7 @@
     "__prefab": {
       "__id__": 11
     },
-    "rewardType": 0,
+    "rewardType": 1,
     "speed": 150,
     "_id": ""
   },
@@ -477,7 +477,6 @@
       "__id__": 0
     },
     "fileId": "abR82baoxNRoC45m7mTAXx",
-    "instance": null,
     "targetOverrides": null
   }
 ]

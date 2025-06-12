@@ -1,7 +1,7 @@
 import { _decorator, Component, Enum, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
-enum RewardType {
+export enum RewardType {
    TwoShoot, // 双射
    Bomb, // 炸弹 
 }
@@ -19,12 +19,15 @@ export class Reward extends Component {
     speed: number = 150;
 
     start() {
-
     }
 
     update(deltaTime: number) {
         const p = this.node.position;
         this.node.setPosition(p.x, p.y - this.speed * deltaTime, p.z);
+
+        if (this.node.position.y < -580) {
+            this.node.destroy(); // 超出屏幕范围，销毁节点    
+        }
     }
 }
 

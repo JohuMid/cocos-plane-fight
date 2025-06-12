@@ -18,10 +18,18 @@ export class EnemyManager extends Component {
     @property({ type: Prefab })
     enemy2Prefab: Prefab = null; // 敌人2的预制体
 
+    @property
+    rewardSpawnRate: number = 15; // 奖励的生成频率
+    @property({ type: Prefab })
+    reward1Prefab: Prefab = null; // 双子弹奖励的预制体
+    @property({ type: Prefab })
+    reward2Prefab: Prefab = null; // 炸弹奖励的预制体
+
     start() {
         this.schedule(this.enemy0Spawn, this.enemy0SpawnRate);
         this.schedule(this.enemy1Spawn, this.enemy1SpawnRate);
         this.schedule(this.enemy2Spawn, this.enemy2SpawnRate);
+        this.schedule(this.rewardSpawn, this.rewardSpawnRate);
     }
 
     update(deltaTime: number) {
@@ -37,21 +45,27 @@ export class EnemyManager extends Component {
 
     enemy0Spawn() {
         // 生成敌人0的逻辑
-        this.enemySpawn(this.enemy0Prefab,-215,215,450);
+        this.objectSpawn(this.enemy0Prefab,-215,215,450);
 
     }
 
     enemy1Spawn() {
         // 生成敌人1的逻辑
-        this.enemySpawn(this.enemy1Prefab, -200, 200, 475);
+        this.objectSpawn(this.enemy1Prefab, -200, 200, 475);
     }
 
     enemy2Spawn() {
         // 生成敌人2的逻辑
-        this.enemySpawn(this.enemy2Prefab, -150, 150, 500);
+        this.objectSpawn(this.enemy2Prefab, -150, 150, 500);
     }
 
-    enemySpawn(enemtPrefab:Prefab,minX:number,maxX:number,Y:number) {
+    rewardSpawn() {
+        // 生成奖励的逻辑生成0和1
+        const randomReward = Math.random() < 0.5 ? this.reward1Prefab : this.reward2Prefab;
+        this.objectSpawn(randomReward,-207,207,474);
+    }
+
+    objectSpawn(enemtPrefab:Prefab,minX:number,maxX:number,Y:number) {
         // 生成敌人的逻辑
         const enemy = instantiate(enemtPrefab);
         this.node.addChild(enemy);    

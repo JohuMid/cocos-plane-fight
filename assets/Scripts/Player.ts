@@ -1,4 +1,6 @@
 import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
+import { Reward, RewardType } from './Reward';
+import { GameManger } from './GameManger';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
@@ -49,6 +51,10 @@ export class Player extends Component {
     isInvincible: boolean = false; // 是否处于无敌状态
     invincibleTimer: number = 0; // 无敌计时器
 
+    @property
+    twoShootTime: number = 5; // 双射持续时间
+    twoShootTimer: number = 0; // 双射计时器
+
     shootTime: number = 0; // 上次射击时间
 
     collider: Collider2D = null;
@@ -63,7 +69,48 @@ export class Player extends Component {
         }
     }
 
+    lastReward: Reward = null; // 上次奖励时间
+
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
+        const reward = otherCollider.getComponent(Reward);
+
+        if (reward === this.lastReward) { // 如果是同一个奖励，则不处理
+            return; // 直接返回，不执行下面的代码
+        }
+        this.lastReward = reward; // 更新上次奖励
+
+        if (reward) {
+            console.log("奖励类型：", reward.rewardType);
+            
+            switch (reward.rewardType) { // 根据奖励类型执行不同的逻辑
+                case RewardType.TwoShoot: // 双子弹奖励
+                    this.transitionToTwoShoot(); // 切换到双射状态
+                    break; // 不执行任何逻辑，直接返回
+                case RewardType.Bomb: // 炸弹奖励
+                    GameManger.getInstance().addBomb(); // 增加炸弹数量
+                    break; // 不执行任何逻辑，直接返回
+            }
+            // 延迟销毁奖励节点
+            this.scheduleOnce(() => {
+                if (otherCollider.node) {
+                    otherCollider.node.destroy(); // 销毁奖励节点
+                }
+            }, 0);
+        } else {
+            this.onContactToEnemy();
+        }
+    }
+    transitionToTwoShoot() {
+        this.twoShootTimer = 0; // 重置双射计时器
+        this.shootType = ShootType.TwoShoot; // 切换到双射状态 
+    }
+
+    transitionToOneShoot() {
+        this.twoShootTimer = 0; // 重置双射计时器
+        this.shootType = ShootType.OneShoot; // 切换到单射状态 
+    }
+
+    onContactToEnemy() {
         if (this.isInvincible) { // 如果处于无敌状态，则不处理碰撞
             return; // 直接返回，不执行下面的代码
         }
@@ -152,6 +199,11 @@ export class Player extends Component {
     }
 
     twoShoot(deltaTime: number) {
+        this.twoShootTimer += deltaTime; // 增加双射计时器
+        if (this.twoShootTimer >= this.twoShootTime) { // 如果双射计时器达到双射持续时间
+            this.transitionToOneShoot() // 切换回单射状态
+        }
+
         this.shootTime += deltaTime;
         if (this.shootTime >= this.shootRate) {
             this.shootTime = 0; // 重置射击时间

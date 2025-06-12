@@ -44,7 +44,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": -40.554,
       "y": 500.792,
       "z": 0
     },
@@ -442,7 +442,6 @@
       "__id__": 0
     },
     "fileId": "abR82baoxNRoC45m7mTAXx",
-    "instance": null,
     "targetOverrides": null
   }
 ]
