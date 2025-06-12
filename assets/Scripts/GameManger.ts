@@ -14,10 +14,14 @@ export class GameManger extends Component {
     }
 
     @property
-    bombNumber: number = 0;
+    private bombNumber: number = 0;
+
+    protected onLoad(): void {
+        GameManger.instance = this; // 将当前实例设置为单例实例
+    }
 
     start() {
-        GameManger.instance = this; // 将当前实例设置为单例实例
+       
     }
 
     update(deltaTime: number) {
@@ -27,6 +31,12 @@ export class GameManger extends Component {
 
     public addBomb() {
         this.bombNumber += 1; 
+        // 触发事件通知UI更新
+        this.node.emit('onBombChange');
+    }
+
+    public getBombNumber(): number {
+        return this.bombNumber; 
     }
 }
 
