@@ -30,9 +30,15 @@ export class Enery extends Component {
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
 
-
         if (otherCollider.getComponent(Bullet)) {
             otherCollider.enabled = false; // 禁用碰撞器
+
+            // 延迟销毁子弹节点
+            this.scheduleOnce(() => {
+                if (otherCollider.node) {
+                    otherCollider.node.destroy();
+                }
+            }, 0);
         }
         this.hp -= 1;
 
@@ -53,12 +59,6 @@ export class Enery extends Component {
                 that.node.destroy(); // 销毁敌人节点 
             }, 1)
         }
-        // 延迟销毁子弹节点
-        this.scheduleOnce(() => {
-            if (otherCollider.node) {
-                otherCollider.node.destroy();
-            }
-        }, 0);
     }
 
     update(deltaTime: number) {

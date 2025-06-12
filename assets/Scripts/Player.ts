@@ -35,7 +35,7 @@ export class Player extends Component {
     lifeCount: number = 3;
 
     @property({ type: Animation })
-    anim: Animation = null; // 动画组件
+    anim: Animation = null;
 
     @property(CCString)
     animHit: string = '';
@@ -61,7 +61,7 @@ export class Player extends Component {
 
         this.lifeCount -= 1;
         if (this.lifeCount > 0) {
-            this.anim.play(this.animHit);    
+            this.anim.play(this.animHit);
         } else {
             this.anim.play(this.animDown);
         }
