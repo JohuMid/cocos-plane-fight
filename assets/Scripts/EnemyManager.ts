@@ -12,7 +12,7 @@ export class EnemyManager extends Component {
     enemy1SpawnRate: number = 3; // 敌人1的生成频率
     @property({ type: Prefab })
     enemy1Prefab: Prefab = null; // 敌人1的预制体
-    
+
     @property
     enemy2SpawnRate: number = 10; // 敌人2的生成频率
     @property({ type: Prefab })
@@ -33,8 +33,8 @@ export class EnemyManager extends Component {
     }
 
     update(deltaTime: number) {
-        
-        
+
+
     }
 
     protected onDestroy(): void {
@@ -45,7 +45,7 @@ export class EnemyManager extends Component {
 
     enemy0Spawn() {
         // 生成敌人0的逻辑
-        this.objectSpawn(this.enemy0Prefab,-215,215,450);
+        this.objectSpawn(this.enemy0Prefab, -215, 215, 450);
 
     }
 
@@ -62,16 +62,17 @@ export class EnemyManager extends Component {
     rewardSpawn() {
         // 生成奖励的逻辑生成0和1
         const randomReward = Math.random() < 0.5 ? this.reward1Prefab : this.reward2Prefab;
-        this.objectSpawn(randomReward,-207,207,474);
+        this.objectSpawn(randomReward, -207, 207, 474);
     }
 
-    objectSpawn(enemtPrefab:Prefab,minX:number,maxX:number,Y:number) {
+    objectSpawn(enemtPrefab: Prefab, minX: number, maxX: number, Y: number) {
         // 生成敌人的逻辑
         const enemy = instantiate(enemtPrefab);
-        this.node.addChild(enemy);    
+        this.node.addChild(enemy);
         const randomX = Math.random() * (maxX - minX) + minX;
         enemy.setPosition(randomX, Y, 0); // 设置敌人的初始位置
     }
+    
 }
 
 

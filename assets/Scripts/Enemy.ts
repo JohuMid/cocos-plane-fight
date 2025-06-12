@@ -1,5 +1,6 @@
 import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType } from 'cc';
 import { Bullet } from './Bullet';
+import { GameManger } from './GameManger';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enery')
@@ -17,6 +18,8 @@ export class Enery extends Component {
     animHit: string = '';
     @property(CCString)
     animDown: string = '';
+    @property
+    score: number = 100;
 
     collider: Collider2D = null;
 
@@ -49,6 +52,7 @@ export class Enery extends Component {
         }
 
         if (this.hp <= 0) {
+            GameManger.getInstance().addScore(this.score);
             // 销毁敌人节点
             if (this.collider) {
                 this.collider.enabled = false; // 禁用碰撞器

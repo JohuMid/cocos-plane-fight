@@ -1,4 +1,5 @@
 import { _decorator, Component, Node } from 'cc';
+import { ScoreUI } from './UI/ScoreUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManger')
@@ -15,6 +16,13 @@ export class GameManger extends Component {
 
     @property
     private bombNumber: number = 0;
+
+    @property
+    private score: number = 0; // 得分
+
+
+    @property({ type: ScoreUI })
+    private ScoreUI = null;
 
     protected onLoad(): void {
         GameManger.instance = this; // 将当前实例设置为单例实例
@@ -37,6 +45,12 @@ export class GameManger extends Component {
 
     public getBombNumber(): number {
         return this.bombNumber; 
+    }
+
+
+    public addScore(score: number) {
+        this.score += score; // 增加得分
+        this.ScoreUI.updateUI(this.score); // 更新UI显示
     }
 }
 

@@ -1,6 +1,7 @@
 import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 import { Reward, RewardType } from './Reward';
 import { GameManger } from './GameManger';
+import { LifeCountUI } from './UI/LifeCountUI';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
@@ -59,6 +60,9 @@ export class Player extends Component {
 
     collider: Collider2D = null;
 
+    @property({ type: LifeCountUI })
+    lifeCountUI:LifeCountUI = null; // 生命值UI组件
+
 
     protected onLoad(): void {
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
@@ -67,6 +71,10 @@ export class Player extends Component {
         if (this.collider) {
             this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         }
+    }
+
+    protected start(): void {
+        this.lifeCountUI.updateUI(this.lifeCount); // 更新UI
     }
 
     lastReward: Reward = null; // 上次奖励时间
@@ -118,7 +126,8 @@ export class Player extends Component {
         this.isInvincible = true; // 设置为无敌状态
         this.invincibleTimer = 0; // 重置无敌计时器
 
-        this.lifeCount -= 1;
+        this.changeLifeCount(-1); // 调用方法修改生命值
+
         if (this.lifeCount > 0) {
             this.anim.play(this.animHit);
         } else {
@@ -131,6 +140,11 @@ export class Player extends Component {
                 this.collider.enabled = false; // 禁用碰撞器
             }
         }
+    }
+
+    changeLifeCount(count: number) { // 定义一个方法，用于修改生命值
+        this.lifeCount += count; // 修改生命值
+        this.lifeCountUI.updateUI(this.lifeCount); // 更新UI
     }
 
     protected onDestroy(): void {
