@@ -4,6 +4,7 @@ const { ccclass, property } = _decorator;
 enum ShootType {
     OneShoot, // 单射
     TwoShoot, // 双射 
+    None // 无
 }
 
 @ccclass('Player')
@@ -42,6 +43,11 @@ export class Player extends Component {
     @property(CCString)
     animDown: string = '';
 
+    @property
+    invincibleTime: number = 1; // 无敌时间
+
+    isInvincible: boolean = false; // 是否处于无敌状态
+    invincibleTimer: number = 0; // 无敌计时器
 
     shootTime: number = 0; // 上次射击时间
 
@@ -58,6 +64,12 @@ export class Player extends Component {
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
+        if (this.isInvincible) { // 如果处于无敌状态，则不处理碰撞
+            return; // 直接返回，不执行下面的代码
+        }
+
+        this.isInvincible = true; // 设置为无敌状态
+        this.invincibleTimer = 0; // 重置无敌计时器
 
         this.lifeCount -= 1;
         if (this.lifeCount > 0) {
@@ -67,6 +79,7 @@ export class Player extends Component {
         }
 
         if (this.lifeCount <= 0) {
+            this.shootType = ShootType.None; // 飞机死亡时不发射子弹
             if (this.collider) {
                 this.collider.enabled = false; // 禁用碰撞器
             }
@@ -118,6 +131,13 @@ export class Player extends Component {
                 break;
         }
         this.shootTime += deltaTime;
+
+        if (this.isInvincible) { // 如果处于无敌状态
+            this.invincibleTimer += deltaTime; // 增加无敌计时器
+            if (this.invincibleTimer >= this.invincibleTime) { // 如果无敌计时器达到无敌时间
+                this.isInvincible = false; // 恢复正常状态
+            }
+        }
 
     }
 
