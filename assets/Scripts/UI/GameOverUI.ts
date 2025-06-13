@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node } from 'cc';
+import { _decorator, Component, director, Label, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameOverUI')

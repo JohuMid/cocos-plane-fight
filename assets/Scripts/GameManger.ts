@@ -84,9 +84,41 @@ export class GameManger extends Component {
 
     gameOver() {
         this.onPauseButtonClick();
-        // 触发游戏结束事件
-        this.gameOverUI.showGameOverUI(1,2); // 显示游戏结束界面
+        // 触发游戏结束事件，将当前得分作为参数传递
+        this.gameOverUI.showGameOverUI(this.getHighestScore(),this.score); // 显示游戏结束界面
+
+        // 存储历史最高分
+        let highestScore = this.getHighestScore();
+        if (this.score > highestScore) {
+            highestScore = this.score;
+            this.setHighestScore(highestScore);
+        }
     }
+
+    getHighestScore(): number {
+        // 从本地存储中获取历史最高分
+        let highestScore = 0;
+        let highestScoreStr = localStorage.getItem('highestScore');
+        if (highestScoreStr) {
+            highestScore = parseInt(highestScoreStr);
+        }
+        return highestScore;
+    }
+
+    setHighestScore(highestScore: number) {
+        // 将历史最高分存储到本地存储中
+        localStorage.setItem('highestScore', highestScore.toString());
+    }
+
+    onRestartButtonClick() {
+        // 重新开始游戏
+    }
+
+    onQuitButtonClick() {
+        // 退出游戏
+    }
+
+    
 }
 
 
