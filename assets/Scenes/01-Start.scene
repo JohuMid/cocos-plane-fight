@@ -52,7 +52,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 25
+      "__id__": 27
     },
     "_id": "86d77e46-8cd7-44e3-836a-d9486387250f"
   },
@@ -84,13 +84,16 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 22
-      },
-      {
         "__id__": 23
       },
       {
         "__id__": 24
+      },
+      {
+        "__id__": 25
+      },
+      {
+        "__id__": 26
       }
     ],
     "_prefab": null,
@@ -825,7 +828,11 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 22
+      }
+    ],
     "_interactable": true,
     "_transition": 2,
     "_normalColor": {
@@ -878,6 +885,16 @@
       "__id__": 15
     },
     "_id": "92TuV0uXVFdZMVZzleB3k7"
+  },
+  {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 2
+    },
+    "component": "",
+    "_componentId": "ddb43AWf/hIj4HPqwNjrv9r",
+    "handler": "onStartButtonClick",
+    "customEventData": ""
   },
   {
     "__type__": "cc.UITransform",
@@ -948,30 +965,42 @@
     "_id": "c5V1EV8IpMtrIvY1OE9t2u"
   },
   {
+    "__type__": "ddb43AWf/hIj4HPqwNjrv9r",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "01ZzcqxRhDh4I6dPOTKW2l"
+  },
+  {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 26
-    },
-    "shadows": {
-      "__id__": 27
-    },
-    "_skybox": {
       "__id__": 28
     },
-    "fog": {
+    "shadows": {
       "__id__": 29
     },
-    "octree": {
+    "_skybox": {
       "__id__": 30
     },
-    "skin": {
+    "fog": {
       "__id__": 31
     },
-    "lightProbeInfo": {
+    "octree": {
       "__id__": 32
     },
-    "postSettings": {
+    "skin": {
       "__id__": 33
+    },
+    "lightProbeInfo": {
+      "__id__": 34
+    },
+    "postSettings": {
+      "__id__": 35
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false

@@ -1,10 +1,13 @@
-import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType } from 'cc';
+import { _decorator, Animation, AudioClip, CCString, Collider2D, Component, Contact2DType } from 'cc';
 import { Bullet } from './Bullet';
 import { GameManger } from './GameManger';
+import { EnemyManager } from './EnemyManager';
+import { AudioMgr } from './AudioMgr';
 const { ccclass, property } = _decorator;
 
-@ccclass('Enery')
-export class Enery extends Component {
+@ccclass('Enemy')
+export class Enemy extends Component {
+
     @property
     speed: number = 300;
 
@@ -20,6 +23,9 @@ export class Enery extends Component {
     animDown: string = '';
     @property
     score: number = 100;
+
+    @property({ type: AudioClip })
+    enemyDownAudio: AudioClip = null;
 
     collider: Collider2D = null;
 
@@ -52,16 +58,7 @@ export class Enery extends Component {
         }
 
         if (this.hp <= 0) {
-            GameManger.getInstance().addScore(this.score);
-            // 销毁敌人节点
-            if (this.collider) {
-                this.collider.enabled = false; // 禁用碰撞器
-            }
-
-            const that = this
-            this.scheduleOnce(() => {
-                that.node.destroy(); // 销毁敌人节点 
-            }, 1)
+            this.dead();
         }
     }
 
@@ -80,6 +77,40 @@ export class Enery extends Component {
         if (this.collider) {
             this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         }
+        EnemyManager.getInstance().removeEnemy(this.node); // 从敌人数组中移除敌人节点
+    }
+
+    haveDead: boolean = false;
+
+    dead() {
+        if (this.haveDead) { // 避免重复调用
+            return; // 直接返回，不执行下面的代码
+        }
+
+        AudioMgr.inst.playOneShot(this.enemyDownAudio, 1)
+        // EnemyManager.getInstance().removeEnemy(this.node); // 从敌人数组中移除敌人节点
+
+        GameManger.getInstance().addScore(this.score);
+        // 销毁敌人节点
+        if (this.collider) {
+            this.collider.enabled = false; // 禁用碰撞器
+        }
+
+        const that = this
+        this.scheduleOnce(() => {
+            that.node.destroy(); // 销毁敌人节点 
+        }, 1)
+        this.haveDead = true;
+    }
+
+    killNow() { // 立即销毁敌人节点
+        if (this.hp <= 0) return;
+        this.hp = 0;
+        // 播放坠毁动画
+        if (this.anim) {
+            this.anim.play(this.animDown);
+        }
+        this.dead();
     }
 }
 

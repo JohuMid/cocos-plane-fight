@@ -1,7 +1,8 @@
-import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
+import { _decorator, Animation, AudioClip, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 import { Reward, RewardType } from './Reward';
 import { GameManger } from './GameManger';
 import { LifeCountUI } from './UI/LifeCountUI';
+import { AudioMgr } from './AudioMgr';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
@@ -61,7 +62,17 @@ export class Player extends Component {
     collider: Collider2D = null;
 
     @property({ type: LifeCountUI })
-    lifeCountUI:LifeCountUI = null; // 生命值UI组件
+    lifeCountUI: LifeCountUI = null; // 生命值UI组件
+
+    @property({ type: AudioClip })
+    bulletAudio: AudioClip = null; // 子弹音效
+
+
+    @property({ type: AudioClip })
+    getBombAudio: AudioClip = null; // 敌人死亡音效
+
+    @property({ type: AudioClip })
+    getTwoShootAudio: AudioClip = null; // 敌人死亡音效
 
     private canControl: boolean = true; // 控制开关
 
@@ -89,13 +100,13 @@ export class Player extends Component {
         this.lastReward = reward; // 更新上次奖励
 
         if (reward) {
-            console.log("奖励类型：", reward.rewardType);
-            
             switch (reward.rewardType) { // 根据奖励类型执行不同的逻辑
                 case RewardType.TwoShoot: // 双子弹奖励
+                    AudioMgr.inst.playOneShot(this.getTwoShootAudio, 0.3);
                     this.transitionToTwoShoot(); // 切换到双射状态
                     break; // 不执行任何逻辑，直接返回
                 case RewardType.Bomb: // 炸弹奖励
+                    AudioMgr.inst.playOneShot(this.getBombAudio, 0.3);
                     GameManger.getInstance().addBomb(); // 增加炸弹数量
                     break; // 不执行任何逻辑，直接返回
             }
@@ -212,6 +223,7 @@ export class Player extends Component {
     oneShoot(deltaTime: number) {
         this.shootTime += deltaTime;
         if (this.shootTime >= this.shootRate) {
+            AudioMgr.inst.playOneShot(this.bulletAudio, 0.3);
             this.shootTime = 0; // 重置射击时间
             const buttle1 = instantiate(this.buttle1Prefab); // 实例化子弹
             this.buttleParent.addChild(buttle1); // 添加到父节点下
@@ -227,6 +239,7 @@ export class Player extends Component {
 
         this.shootTime += deltaTime;
         if (this.shootTime >= this.shootRate) {
+            AudioMgr.inst.playOneShot(this.bulletAudio, 0.6);
             this.shootTime = 0; // 重置射击时间
             const buttle1 = instantiate(this.buttle2Prefab); // 实例化子弹
             const buttle2 = instantiate(this.buttle2Prefab); // 实例化子弹
