@@ -1,4 +1,4 @@
-import { _decorator, Component, director, Node } from 'cc';
+import { _decorator, Component, director, Node, sys } from 'cc';
 import { ScoreUI } from './UI/ScoreUI';
 import { Player } from './Player';
 import { GameOverUI } from './UI/GameOverUI';
@@ -112,6 +112,8 @@ export class GameManger extends Component {
 
     onRestartButtonClick() {
         // 重新开始游戏
+        this.onResumeButtonClick()
+        director.loadScene(director.getScene().name); // 加载游戏场景
     }
 
     onQuitButtonClick() {

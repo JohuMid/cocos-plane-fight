@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab } from 'cc';
+import { _decorator, Component, input, Input, instantiate, Node, Prefab } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('EnemyManager')
@@ -25,6 +25,13 @@ export class EnemyManager extends Component {
     @property({ type: Prefab })
     reward2Prefab: Prefab = null; // 炸弹奖励的预制体
 
+    doubleClickInterval: number = 0.3; // 双击间隔
+    lastClickTime: number = 0; // 上次点击时间
+
+    protected onLoad(): void {
+        input.on(Input.EventType.TOUCH_END, this.onTouchEnd,this)
+    }
+
     start() {
         this.schedule(this.enemy0Spawn, this.enemy0SpawnRate);
         this.schedule(this.enemy1Spawn, this.enemy1SpawnRate);
@@ -41,6 +48,7 @@ export class EnemyManager extends Component {
         this.unschedule(this.enemy0Spawn);
         this.unschedule(this.enemy1Spawn);
         this.unschedule(this.enemy2Spawn);
+        input.off(Input.EventType.TOUCH_END, this.onTouchEnd, this);
     }
 
     enemy0Spawn() {
@@ -72,6 +80,20 @@ export class EnemyManager extends Component {
         const randomX = Math.random() * (maxX - minX) + minX;
         enemy.setPosition(randomX, Y, 0); // 设置敌人的初始位置
     }
+
+    onTouchEnd() {
+        const currentTime = Date.now();
+        if ((currentTime - this.lastClickTime)/1000 < this.doubleClickInterval) {
+            // 双击事件
+            this.onDoubleClick();
+        }
+        this.lastClickTime = currentTime;
+    }
+
+    onDoubleClick() {
+        console.log('双击事件');
+    }
+
     
 }
 
